@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+
+  auth-server:
+    container_name: "auth-server"
+    build:
+      context: ./auth
+    ports:
+      - 9001:9001
+    volumes:
+      - type: bind
+        source: ./auth
+        target: /home/auth
+    environment:
+      - SECRET_KEY=dev_secret_key
+
+  resources-server:
+    container_name: "resources-server"
+    build:
+      context: ./resources-server
+    ports:
+      - 9002:9002
+    volumes:
+      - type: bind
+        source: ./resources-server
+        target: /home/resources
+    environment:
+      - SECRET_KEY=dev_secret_key
+    depends_on:
+      auth-server:
+        condition: service_started
+
